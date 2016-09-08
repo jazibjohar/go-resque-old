@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jazibjohar/go-resque"
-	"github.com/jazibjohar/go-resque/driver"
+	"github.com/kiddom/go-resque"
+	"github.com/kiddom/go-resque/driver"
 	"github.com/simonz05/godis/redis"
 )
 
