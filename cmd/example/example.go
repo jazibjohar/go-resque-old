@@ -3,7 +3,8 @@ package main
 import (
 	"context"
 
-	"github.com/go-redis/redis/v9"            // Redis client from go-redis package
+	"github.com/go-redis/redis/v9" // Redis client from go-redis package
+
 	"github.com/skaurus/go-resque"            // Import this package
 	_ "github.com/skaurus/go-resque/redis.v9" // Use go-redis v9
 )
