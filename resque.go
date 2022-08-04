@@ -10,16 +10,14 @@ import (
 
 var drivers = make(map[string]driver.Enqueuer)
 
-type jobArg interface{}
-
 type MockRedisDriver struct {
 	driver.Enqueuer
 }
 
 type job struct {
-	Queue string   `json:"queue,omitempty"`
-	Class string   `json:"class"`
-	Args  []jobArg `json:"args"`
+	Queue string        `json:"queue,omitempty"`
+	Class string        `json:"class"`
+	Args  []interface{} `json:"args"`
 }
 
 func Register(name string, driver driver.Enqueuer) {
@@ -44,10 +42,10 @@ type RedisEnqueuer struct {
 	drv driver.Enqueuer
 }
 
-func (enqueuer *RedisEnqueuer) Enqueue(ctx context.Context, queue, jobClass string, args ...jobArg) (int64, error) {
+func (enqueuer *RedisEnqueuer) Enqueue(ctx context.Context, queue, jobClass string, args ...interface{}) (int64, error) {
 	// NOTE: Dirty hack to make a [{}] JSON struct
 	if len(args) == 0 {
-		args = append(make([]jobArg, 0), make(map[string]jobArg, 0))
+		args = append(make([]interface{}, 0), make(map[string]interface{}, 0))
 	}
 
 	jobJSON, err := json.Marshal(&job{Class: jobClass, Args: args})
@@ -59,11 +57,11 @@ func (enqueuer *RedisEnqueuer) Enqueue(ctx context.Context, queue, jobClass stri
 }
 
 // EnqueueIn enque a job at a duration
-func (enqueuer *RedisEnqueuer) EnqueueIn(ctx context.Context, delay time.Duration, queue, jobClass string, args ...jobArg) (bool, error) {
+func (enqueuer *RedisEnqueuer) EnqueueIn(ctx context.Context, delay time.Duration, queue, jobClass string, args ...interface{}) (bool, error) {
 	enqueueTime := time.Now().Add(delay)
 
 	if len(args) == 0 {
-		args = append(make([]jobArg, 0), make(map[string]jobArg, 0))
+		args = append(make([]interface{}, 0), make(map[string]interface{}, 0))
 	}
 
 	jobJSON, err := json.Marshal(&job{Class: jobClass, Args: args, Queue: queue})
