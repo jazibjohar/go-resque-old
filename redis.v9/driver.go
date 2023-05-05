@@ -30,8 +30,12 @@ func (d *drv) ListPush(ctx context.Context, queue string, jobJSON string) (int64
 	return d.client.RPush(ctx, d.nameSpace+"queue:"+queue, []byte(jobJSON)).Result()
 }
 
+func getSortedSetKey(namespace, queue string) string {
+	return namespace + "queue:sorted:" + queue
+}
+
 func (d *drv) ListPushDelay(ctx context.Context, t time.Time, queue string, jobJSON string) (bool, error) {
-	_, err := d.client.ZAdd(ctx, d.nameSpace+"queue:"+queue, redis.Z{
+	_, err := d.client.ZAdd(ctx, getSortedSetKey(d.nameSpace, queue), redis.Z{
 		Score:  timeToSecondsWithNanoPrecision(t),
 		Member: []byte(jobJSON),
 	}).Result()
@@ -53,7 +57,7 @@ func (d *drv) Poll(ctx context.Context) {
 			now := timeToSecondsWithNanoPrecision(time.Now())
 			for key := range d.schedule {
 				jobs, _ := d.client.ZRangeArgs(ctx, redis.ZRangeArgs{
-					Key:     key,
+					Key:     getSortedSetKey(d.nameSpace, key),
 					ByScore: true,
 					Start:   "-inf",
 					Stop:    now,
@@ -62,8 +66,8 @@ func (d *drv) Poll(ctx context.Context) {
 				if len(jobs) == 0 {
 					continue
 				}
-				if removed, _ := d.client.ZRem(ctx, key, []byte(jobs[0])).Result(); removed > 0 {
-					d.client.LPush(ctx, key, []byte(jobs[0]))
+				if removed, _ := d.client.ZRem(ctx, getSortedSetKey(d.nameSpace, key), []byte(jobs[0])).Result(); removed > 0 {
+					d.client.LPush(ctx, d.nameSpace+"queue:"+key, []byte(jobs[0]))
 				}
 			}
 			time.Sleep(100 * time.Millisecond)
