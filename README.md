@@ -7,6 +7,7 @@ Simple [Resque](https://github.com/resque/resque) queue client for [Go](http://g
 This is a fork of [go-resque](https://github.com/kavu/go-resque) (one of many).
 
 Differences from the original are:
+
 - it is a Go module
 - travis config is updated to use newer Go versions
 - all drivers except one removed
@@ -19,7 +20,7 @@ Differences from the original are:
 Installation is simple and familiar for Go programmers:
 
 ```
-go get github.com/skaurus/go-resque
+go get github.com/jazibjohar/go-resque
 ```
 
 ## Usage
@@ -45,8 +46,8 @@ import (
 	"context"
 
 	"github.com/go-redis/redis/v9"            // Redis client from go-redis package
-	"github.com/skaurus/go-resque"            // Import this package
-	_ "github.com/skaurus/go-resque/redis.v9" // Use go-redis v9
+	"github.com/jazibjohar/go-resque"            // Import this package
+	_ "github.com/jazibjohar/go-resque/redis.v9" // Use go-redis v9
 )
 
 func main() {

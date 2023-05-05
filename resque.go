@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/skaurus/go-resque/driver"
+	"github.com/jazibjohar/go-resque/driver"
 )
 
 var drivers = make(map[string]driver.Enqueuer)

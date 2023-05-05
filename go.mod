@@ -1,4 +1,4 @@
-module github.com/skaurus/go-resque
+module github.com/jazibjohar/go-resque
 
 go 1.18
 

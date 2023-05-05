@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-redis/redis/v9" // Redis client from go-redis package
 
-	"github.com/skaurus/go-resque"            // Import this package
-	_ "github.com/skaurus/go-resque/redis.v9" // Use go-redis v9
+	"github.com/jazibjohar/go-resque"            // Import this package
+	_ "github.com/jazibjohar/go-resque/redis.v9" // Use go-redis v9
 )
 
 func main() {
